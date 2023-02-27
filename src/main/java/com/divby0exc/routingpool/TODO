@@ -1,0 +1,41 @@
+    /***
+     * Skapa grupper
+     * Registrera nya medlemmar i en grupp
+     * Lägga till fordon tillhörande gruppen
+     * Ta bort fordon tillhörande gruppen
+     * Hämta en lista över fordon tillhörande gruppen
+     * Här ska det även framgå vart fordonet är placerat och ifall
+     *  den är tillgänglig eller redan används av en annan gruppmedlem.
+     * Sätta ett viss fordon i gruppen som upptagen. Det ska även gå att
+     *  sätta hur länge fordonet förväntas vara upptagen
+     * Tiden ska utgå från en rutt hämtad från api:et som
+     *  hanterar enskild transport.
+     * Registrera grupp-promenader.
+     * Promenadens rutt hämtas från tjänsten
+     *  som hanterar enskild transport.
+     * Avregistrera promenader
+     * Individ ska därför kunna skapa promenader och annonsera ut dem i gruppen.
+     *  Vidare ska även individ kunna ändra på plats och tillgänglig av olika fordon
+     *  samt köpa in eller ta bort fordon till eller ifrån gruppen.
+     * Summering:
+     */
+     /***
+     TODO
+     Kategori grupptransport
+     Denna kategori är en förlängning av enskilt men istället för att individen kan
+      favorisera särskilda ruter så kan individen välja att gå med i särskilda
+      grupper och då hämta information som tillhör gruppen. Individen ska kunna
+      registrera sig för återkommande promenader tillhörande en grupp av individer.
+      Vidare ska individen även kunna uppdatera status på cyklar, bilar eller andra
+      fordon som används för transport inom gruppen.
+
+
+     I tjänsten för grupp transport ska det därför finnas endpoints för att:
+
+
+      ============================
+      Email notis ist för websocket
+      EmailClient
+      ============================
+
+     ***/
