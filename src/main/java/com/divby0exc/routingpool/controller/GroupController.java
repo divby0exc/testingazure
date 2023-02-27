@@ -9,28 +9,23 @@ import com.divby0exc.routingpool.service.GroupService;
 import com.divby0exc.routingpool.service.MemberService;
 import com.divby0exc.routingpool.service.WalkService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @RestController
 @RequestMapping("/group_transport/*")
-public class RoutingController {
+public class GroupController {
 
     @Autowired
     private WebClient.Builder webClient;
     @Autowired
     GroupService groupService;
-    @Autowired
-    CarService carService;
-    @Autowired
-    MemberService memberService;
-    @Autowired
-    WalkService walkService;
+
+
+
 
     @PostMapping("create_group")
     public String createGroup(@RequestBody RoutingGroup group) {
