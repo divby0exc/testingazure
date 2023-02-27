@@ -5,11 +5,11 @@ import com.divby0exc.routingpool.model.RoutingVehicle;
 import java.util.List;
 
 public interface ICarService {
-    public void save(int groupID, RoutingVehicle vehicle);
+    public void save(RoutingVehicle vehicle);
 
-    public void delete(int groupID, int carID);
+    public void delete(Long carID);
 
-    public List<RoutingVehicle> fetchAll(int groupID);
+    public List<RoutingVehicle> fetchAll(Long groupID);
 
-    public void setAvailability(int groupID, int carID, Integer timeLeft);
+    public void setAvailability(Long carID, Integer timeLeft);
 }

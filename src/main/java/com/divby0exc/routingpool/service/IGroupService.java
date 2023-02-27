@@ -2,14 +2,15 @@ package com.divby0exc.routingpool.service;
 
 import com.divby0exc.routingpool.model.RoutingGroup;
 import com.divby0exc.routingpool.model.RoutingMember;
+import com.divby0exc.routingpool.model.RoutingVehicle;
 import com.divby0exc.routingpool.model.RoutingWalk;
+
+import java.util.List;
 
 public interface IGroupService {
     public void save(RoutingGroup group);
 
-    public void save(int groupID, RoutingMember member);
+    public void delete(Long groupID);
 
-    public void save(int groupID, RoutingWalk walk);
-
-    public void delete(int groupID, int walkID);
+    public List<RoutingGroup> fetchAll();
 }
