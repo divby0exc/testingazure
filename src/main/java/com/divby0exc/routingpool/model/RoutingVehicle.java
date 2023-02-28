@@ -17,6 +17,6 @@ public class RoutingVehicle {
     private String name;
     private String color;
     private double occupiedFor;
-    private Long owner;
+    private Long groupID;
 
 }
