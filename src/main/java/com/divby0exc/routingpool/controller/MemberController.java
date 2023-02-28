@@ -15,12 +15,11 @@ public class MemberController {
 
     @GetMapping("get_members/{groupID}")
     public List<RoutingMember> getMembersInGroup(@PathVariable("groupID") Long groupID) {
-
-        return memberService.fetchMember(groupID);
+        return memberService.getAllMembers(groupID);
     }
     @PostMapping("add_member")
     public String addMemberToGroup(@RequestBody RoutingMember member) {
-        memberService.save(member);
+        memberService.addMember(member);
 
         return "Member has been added to group";
     }

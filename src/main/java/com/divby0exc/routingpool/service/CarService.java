@@ -1,5 +1,6 @@
 package com.divby0exc.routingpool.service;
 
+import com.divby0exc.routingpool.model.RoutingGroup;
 import com.divby0exc.routingpool.model.RoutingVehicle;
 import com.divby0exc.routingpool.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,27 +13,34 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
-public class CarService implements ICarService{
+public class CarService {
     @Autowired
     private VehicleRepository repo;
-    @Override
-    public void save(RoutingVehicle vehicle) {
-        repo.save(vehicle);
+
+    public List<RoutingVehicle> getAllCars(Long groupID) {
+        return repo.findAllByGroupID(groupID);
     }
-
-    @Override
-    public void delete(Long carID) {
-        repo.deleteById(carID);
+    public RoutingVehicle addVehicle(RoutingVehicle vehicle) {
+        return repo.save(vehicle);
     }
-
-    @Override
-    public List<RoutingVehicle> fetchAll(Long groupID) {
-
-        return repo.findAllById(Collections.singleton(groupID));
+    public void deleteVehicle(Long carID) {
+        repo.deleteRoutingVehicleById(carID);
     }
-
-    @Override
     public void setAvailability(Long carID, Integer timeLeft) {
-        repo.findById(carID).get().setOccupiedFor(timeLeft);
+
     }
+    public boolean existCar(Long carID) {
+        return repo.existsRoutingVehicleById(carID);
+    }
+    public RoutingVehicle findCar(Long id) {
+        return repo.findRoutingVehicleById(id);
+    }
+    public boolean updateCar(Long id, RoutingVehicle newVehicle) {
+        if(existCar(id)) {
+            addVehicle(newVehicle);
+            return true;
+        }
+        return false;
+    }
+
 }

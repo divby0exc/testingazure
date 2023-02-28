@@ -27,13 +27,13 @@ public class WalkController {
                 .bodyToMono(String.class)
                 .toString();
 
-        walkService.save(walk);
+        walkService.addWalk(walk);
 
         return "Scheduled walk";
     }
     @DeleteMapping("unregister_walk/{walkID}")
     public String unregisterGroupWalks(@PathVariable("walkID") Long walkID) {
-        walkService.delete(walkID);
+        walkService.deleteWalk(walkID);
 
         return "Scheduled walk has been canceled";
     }

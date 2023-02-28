@@ -1,32 +1,35 @@
 package com.divby0exc.routingpool.service;
 
 import com.divby0exc.routingpool.model.RoutingGroup;
-import com.divby0exc.routingpool.model.RoutingMember;
-import com.divby0exc.routingpool.model.RoutingWalk;
 import com.divby0exc.routingpool.repository.GroupRepository;
-import org.apache.catalina.Group;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class GroupService implements IGroupService {
+public class GroupService {
     @Autowired
     private GroupRepository repo;
 
-    @Override
-    public void save(RoutingGroup group) {
-        repo.save(group);
+    public RoutingGroup addGroup(RoutingGroup group) {
+        return repo.save(group);
+    }
+    public void deleteGroup(Long groupID) {
+        repo.deleteRoutingGroupById(groupID);
+    }
+    public boolean existGroup(Long id) {
+        return repo.existsRoutingGroupById(id);
+    }
+    public RoutingGroup getGroup(Long groupID) {
+        return repo.findRoutingGroupById(groupID);
+    }
+    public boolean updateGroup(Long id, RoutingGroup newGroup) {
+        if(existGroup(id)) {
+            addGroup(newGroup);
+            return true;
+        }
+        return false;
     }
 
-    @Override
-    public void delete(Long groupID) {
-        repo.deleteById(groupID);
-    }
-
-    @Override
-    public List<RoutingGroup> fetchAll() {
-        return repo.findAll();
-    }
 }

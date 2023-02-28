@@ -27,12 +27,8 @@ public class GroupController {
 
     @PostMapping("create_group")
     public String createGroup(@RequestBody RoutingGroup group) {
-        groupService.save(group);
+        groupService.addGroup(group);
 
         return "Group has been created";
-    }
-    @GetMapping("show_groups")
-    public List<RoutingGroup> showAllGroups() {
-        return new ArrayList<>(groupService.fetchAll());
     }
 }

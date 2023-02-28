@@ -8,27 +8,28 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class WalkService implements IWalkService{
+public class WalkService {
     @Autowired
     private WalkRepository repo;
 
-    @Override
-    public void save(RoutingWalk walk) {
-        repo.save(walk);
+    public RoutingWalk addWalk(RoutingWalk walk) {
+        return repo.save(walk);
     }
-
-    @Override
-    public void delete(Long walkID) {
-        repo.deleteById(walkID);
+    public void deleteWalk(Long walkID) {
+        repo.deleteRoutingWalkById(walkID);
     }
-
-    @Override
-    public List<RoutingWalk> fetchAll(Long groupID) {
-        return null;
+    public List<RoutingWalk> getAllWalks(Long id) {
+        return repo.findAllByGroupID(id);
     }
-
-    @Override
-    public RoutingWalk findByDest(Long groupID, String to) {
-        return repo.findById(groupID).stream().filter(e -> e.getTo().equals(to)).findFirst().get();
+    public RoutingWalk findWalkInGroupByDest(Long groupID, String to) {
+        return repo.findRoutingWalkByGroupIDAndTo(groupID, to);
+    }
+    public boolean updateWalk(Long id, String to, RoutingWalk newWalk) {
+        RoutingWalk oldWalk = findWalkInGroupByDest(id, to);
+        if(oldWalk!=null) {
+            addWalk(newWalk);
+            return true;
+        }
+        return false;
     }
 }

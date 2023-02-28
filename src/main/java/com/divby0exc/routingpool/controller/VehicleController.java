@@ -19,17 +19,17 @@ public class VehicleController {
 
     @PostMapping("assign_car")
     public String assignCarToGroup(@RequestBody RoutingVehicle vehicle) {
-        carService.save(vehicle);
+        carService.addVehicle(vehicle);
 
         return "Assigned car to group";
     }
     @GetMapping("show_cars/{groupID}")
     public List<RoutingVehicle> showAllCarsInGroup(@PathVariable("groupID") Long groupID) {
-        return new ArrayList<>(carService.fetchAll(groupID));
+        return carService.getAllCars(groupID);
     }
     @DeleteMapping("deassign_car/{groupID}/{carID}")
     public String deassignCarFromGroup(@PathVariable("carID") Long carID) {
-        carService.delete(carID);
+        carService.deleteVehicle(carID);
 
         return "Car has been removed from group";
     }
@@ -40,9 +40,8 @@ public class VehicleController {
          * Här ska det även framgå vart fordonet är placerat
          * och ifall den är tillgänglig eller redan används av en annan gruppmedlem.
          */
-        List<RoutingVehicle> carList = new ArrayList<>(carService.fetchAll(groupID));
 
-        return carList;
+        return carService.getAllCars(groupID);
     }
     @PostMapping("set_available/{carID}")
     public String setCarAvailability(@PathVariable("carID") Long carID) {
@@ -61,7 +60,7 @@ public class VehicleController {
 
         carService.setAvailability(carID, timeLeft);
 
-        return "Car has been set unavailable until " + timeLeft;
+        return "Car has been set unavailable until " + timeLeft + " seconds.";
     }
     @PostMapping
     public String buyCar() {
