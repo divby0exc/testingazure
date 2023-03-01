@@ -1,10 +1,12 @@
 package com.divby0exc.routingpool.config;
 
 import com.divby0exc.routingpool.repository.UserRepository;
+import com.divby0exc.routingpool.service.JWTUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.rest.webmvc.support.ExcerptProjector;
@@ -22,9 +24,14 @@ import java.util.List;
 
 import static sun.util.locale.LocaleUtils.isEmpty;
 
+
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
-    private final JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    private JWTUserDetailsService jwtUserDetailsService;
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
     private final UserRepository userRepository;
 
     public JwtTokenFilter(JwtTokenUtil jwtTokenUtil,
@@ -38,17 +45,18 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                                      FilterChain chain)
         throws ServletException, IOException {
         final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String username = null;
+        String password = null;
         if(isEmpty(header) || !header.startsWith("Bearer ")) {
             chain.doFilter(request, response);
             return;
         }
         final String token = header.split(" ")[1].trim();
-        if(!jwtTokenUtil.validate(token)) {
+        if(!jwtTokenUtil.validateToken(token)) {
             chain.doFilter(request, response);
             return;
         }
-        UserDetails userDetails = userRepository
-                .findByUsername(jwtTokenUtil.getUsername(token))
+        UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username)
                 .orElse(null);
 
         UsernamePasswordAuthenticationToken
