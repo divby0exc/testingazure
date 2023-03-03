@@ -1,74 +1,73 @@
+/***
 package com.divby0exc.routingpool.config;
 
-import com.divby0exc.routingpool.repository.UserRepository;
-import com.divby0exc.routingpool.service.JWTUserDetailsService;
+import com.divby0exc.routingpool.failedjwt.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.data.rest.webmvc.support.ExcerptProjector;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.List;
 
-import static sun.util.locale.LocaleUtils.isEmpty;
+
 
 
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private JWTUserDetailsService jwtUserDetailsService;
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-    private final UserRepository userRepository;
 
-    public JwtTokenFilter(JwtTokenUtil jwtTokenUtil,
-                          UserRepository userRepository) {
-        this.jwtTokenUtil = jwtTokenUtil;
-        this.userRepository = userRepository;
-    }
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private Logger logger;
+
+
     @Override
-    protected void  doFilterInternal(HttpServletRequest request,
-                                     HttpServletResponse response,
-                                     FilterChain chain)
-        throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
+        // Get authorization header and validate
         final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-        String username = null;
-        String password = null;
-        if(isEmpty(header) || !header.startsWith("Bearer ")) {
-            chain.doFilter(request, response);
+        if (header == null || !header.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
             return;
         }
-        final String token = header.split(" ")[1].trim();
-        if(!jwtTokenUtil.validateToken(token)) {
-            chain.doFilter(request, response);
+        // Get jwt token and validate
+        var token = verifyAndDecode(header.substring(7).trim());
+        if (token == null) {
+            filterChain.doFilter(request, response);
             return;
         }
-        UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username)
-                .orElse(null);
+        // Get user identity and set it on the spring security context
+        User user = userRepository.findByEmail(token.getClaim("username").asString()).get(0);
+        UsernamePasswordAuthenticationToken authentication =
+                new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        filterChain.doFilter(request, response);
+    }
 
-        UsernamePasswordAuthenticationToken
-                auth = new UsernamePasswordAuthenticationToken(
-                        userDetails, null,
-                userDetails == null ?
-                        List.of() : userDetails.getAuthorities()
-        );
-        auth.setDetails(
-                new WebAuthenticationDetailsSource().buildDetails(request)
-        );
-        SecurityContextHolder.getContext().setAuthentication(auth);
-        chain.doFilter(request,response);
+    private DecodedJWT verifyAndDecode(String token) throws UnauthorizedError {
+        try {
+            Algorithm algorithm = Algorithm.RSA256(cryptic.getPubKey(), cryptic.getPrivKey());
+            JWTVerifier verifier = JWT.require(algorithm)
+                    // specify an specific claim validations
+                    .withIssuer(issuer)
+                    .withClaim("unique", jwtUnique)
+                    // reusable verifier instance
+                    .build();
+            return verifier.verify(token);
+        } catch (Exception ex) {
+            logger.info(ex.getMessage());
+        }
+        return null;
     }
 }
+*/

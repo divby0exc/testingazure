@@ -1,3 +1,4 @@
+/***
 package com.divby0exc.routingpool.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,51 +19,68 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+@Configuration
+public class WebSecurityConfig {
+
     @Autowired
-    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private JwtTokenFilter jwtTokenFilter;
     @Autowired
-    private UserDetailsService jwtUserDetailsService;
-    @Autowired
-    private JwtRequestFilter jwtRequestFilter;
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        /***
-         * Configure AM so that it knows from where to load
-         * user to match creds
-         * Use BCryptEncoder
-         */
-        auth
-                .userDetailsService(jwtUserDetailsService)
-                .passwordEncoder(passwordEncoder());
-    }
+    private ServiceHeaderFilter specialHeader;
+
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-    @Bean
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
-    protected void configure(HttpSecurity http) throws Exception {
-        /***We dont need csrf for this example***/
-        http
-                .csrf()
-                .disable()
-                .authorizeHttpRequests()
-                .requestMatchers("/auth", "/register")
-                .permitAll()
-                .anyRequest()
-                .authenticated()
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        // Enable COR. Disable CSRF.
+        return http.cors().and().csrf().disable()
+                // Set session management to stateless
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+                // Unauthorized requests exception handler
                 .exceptionHandling()
                 .authenticationEntryPoint(
-                jwtAuthenticationEntryPoint)
+                        (request, response, ex) -> {
+                            response.sendError(
+                                    HttpServletResponse.SC_UNAUTHORIZED,
+                                    ex.getMessage()
+                            );
+                        })
                 .and()
-                .sessionManagement()
-                .sessionCreationPolicy(
-                        SessionCreationPolicy.STATELESS
-                );
-                http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+                // Set permissions on endpoints
+                .authorizeHttpRequests()
+                // Public
+                .requestMatchers("/swagger", "/swagger-ui","/swagger-ui/**", "/v3/**", "/auth/*")
+                .permitAll()
+                // Admin
+                .requestMatchers("/users/**", "/internals/**")
+                .hasAnyRole("ADMIN")
+                // Private endpoints
+                .anyRequest().authenticated()
+                .and()
+                // JWT token filter
+                .addFilterBefore(
+                        jwtTokenFilter,
+                        UsernamePasswordAuthenticationFilter.class
+                )
+                .addFilterBefore(specialHeader, UsernamePasswordAuthenticationFilter.class)
+                .build();
+    }
+
+    // Used by Spring Security if CORS is enabled.
+    @Bean
+    CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("*");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
+    }
+
+    @Bean
+    UserDetailsService getUserDetailsService() {
+        return new SimpleUserDetailsService();
     }
 }
+*/

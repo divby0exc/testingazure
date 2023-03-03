@@ -1,5 +1,7 @@
-package com.divby0exc.routingpool.model;
+/***
+package com.divby0exc.routingpool.failedjwt;
 
+import com.divby0exc.routingpool.model.ComparableEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -16,7 +18,7 @@ import java.util.Set;
 
 @Entity
 @Data
-public class DAOUser extends ComparableEntity {
+public abstract DAOUser extends ComparableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -32,4 +34,4 @@ public class DAOUser extends ComparableEntity {
     @JsonIgnore
     private String password;
     //private Set<Role> authorities = new HashSet<>();
-}
+}*/

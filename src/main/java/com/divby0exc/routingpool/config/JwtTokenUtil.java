@@ -1,3 +1,4 @@
+/***
 package com.divby0exc.routingpool.config;
 
 import io.jsonwebtoken.Claims;
@@ -23,11 +24,15 @@ public class JwtTokenUtil implements Serializable {
     //@Value("${jwt.secret}")
     private String secret;
 
-    /***Retrieve username from jwt token***/
+    */
+/***Retrieve username from jwt token***//*
+
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
-    /***Retrieve exp date from jwt token***/
+    */
+/***Retrieve exp date from jwt token***//*
+
     public Date getExpirationDateFromToken(String token) {
         return getClaimFromToken(token, Claims::getExpiration);
     }
@@ -36,28 +41,36 @@ public class JwtTokenUtil implements Serializable {
         return claimsResolver
                 .apply(claims);
     }
-    /***For retrieving any info from token we will need the secret key***/
+    */
+/***For retrieving any info from token we will need the secret key***//*
+
     private Claims getAllClaimsFromToken(String token) {
         return Jwts.parser()
                 .setSigningKey(secret)
                 .parseClaimsJws(token)
                 .getBody();
     }
-    /***Check if the token has expired***/
+    */
+/***Check if the token has expired***//*
+
     private Boolean isTokenExpired(String token) {
         final Date exp = getExpirationDateFromToken(token);
         return exp.before(new Date());
     }
-    /***Generate token for user***/
+    */
+/***Generate token for user***//*
+
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         return doGenerateToken(claims, userDetails.getUsername());
     }
-    /***
+    */
+/***
      * Define claims of the token, like iss, exp, sub and id
      * Sign the jwt using hs512 and sec key
      * Creating url-safe string
-     */
+     *//*
+
     public String doGenerateToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
                 .setClaims(claims)
@@ -67,9 +80,12 @@ public class JwtTokenUtil implements Serializable {
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
-    /***Validate token***/
+    */
+/***Validate token***//*
+
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = getUsernameFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 }
+*/

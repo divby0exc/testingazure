@@ -1,4 +1,4 @@
-package com.divby0exc.routingpool.model;
+package com.divby0exc.routingpool.failedjwt;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

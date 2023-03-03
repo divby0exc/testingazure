@@ -1,6 +1,6 @@
-package com.divby0exc.routingpool.repository;
+/***
+package com.divby0exc.routingpool.failedjwt;
 
-import com.divby0exc.routingpool.model.DAOUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,3 +8,4 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends JpaRepository<DAOUser, Long> {
     DAOUser findByUsername(String username);
 }
+*/

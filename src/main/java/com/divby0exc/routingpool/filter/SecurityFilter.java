@@ -1,3 +1,4 @@
+/***
 package com.divby0exc.routingpool.filter;
 
 import org.springframework.context.annotation.Bean;
@@ -33,20 +34,24 @@ public class SecurityFilter {
                 // Swagger endpoints must be publicly accessible
                 .requestMatchers("/")
                 .permitAll()
-                .requestMatchers(format("%s/**", restApiDocPath))
+                .requestMatchers(format("%s/**", */
+/*restApiDocPath*//*
+))
                 .permitAll()
-                .requestMatchers(format("%s/**", swaggerPath))
+                .requestMatchers(format("%s/**", */
+/*swaggerPath*//*
+))
                 .permitAll()
                 // Our public endpoints
                 .requestMatchers("/api/public/**")
                 .permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/author/**")
+                .requestMatchers(HttpMethod.GET, "")
                 .permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/author/search")
+                .requestMatchers(HttpMethod.POST, "")
                 .permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/book/**")
+                .requestMatchers(HttpMethod.GET, "")
                 .permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/book/search")
+                .requestMatchers(HttpMethod.POST, "")
                 .permitAll()
                 // Our private endpoints
                 .anyRequest()
@@ -59,3 +64,4 @@ public class SecurityFilter {
         return http.build();
     }
 }
+*/

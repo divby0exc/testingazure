@@ -1,3 +1,4 @@
+/***
 package com.divby0exc.routingpool.config;
 
 import jakarta.servlet.ServletException;
@@ -21,3 +22,4 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
     }
 }
+*/

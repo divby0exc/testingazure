@@ -1,8 +1,7 @@
-package com.divby0exc.routingpool.service;
+/***
+package com.divby0exc.routingpool.failedjwt;
 
 import com.divby0exc.routingpool.dto.UserDTO;
-import com.divby0exc.routingpool.model.DAOUser;
-import com.divby0exc.routingpool.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,3 +33,4 @@ public class JWTUserDetailsService implements UserDetailsService {
         return userRepository.save(newUser);
     }
 }
+*/
